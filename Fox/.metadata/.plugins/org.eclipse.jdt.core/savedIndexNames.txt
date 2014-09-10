@@ -1,0 +1,2 @@
+INDEX VERSION 1.126+C:\Users\Tyler\Dropbox\Fox\.metadata\.plugins\org.eclipse.jdt.core
+1748176914.index

@@ -1,0 +1,10 @@
+package Server;
+
+public class driver {
+	public static void main(String[] args)
+	{
+		VShell myShell = new VShell("ls");
+		myShell.run();
+	}
+	
+}

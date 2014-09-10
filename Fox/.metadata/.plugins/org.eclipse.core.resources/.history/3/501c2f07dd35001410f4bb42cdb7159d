@@ -1,0 +1,93 @@
+/**
+ * Based on http://www.mkyong.com/java/how-to-execute-shell-command-from-java/
+ */
+
+package Server;
+
+import java.io.InputStream;
+import java.io.OutputStream;
+
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.nio.CharBuffer;
+import java.util.Scanner;
+
+//import java.lang.Thread;
+
+public class VShell implements Runnable{
+	
+	private String startCmd;
+	private Process p;
+	
+	public VShell(String inCmd)
+	{
+		//this.startCmd = inCmd;
+		//this.startCmd = "ping -c 3 google.com";
+		this.startCmd = "python";
+	}
+
+	public void run() {
+ 
+		StringBuffer output = new StringBuffer();
+		
+		try {
+			
+			this.p = Runtime.getRuntime().exec(this.startCmd);
+			
+			OutputStream stdin = p.getOutputStream(); // <- Eh?
+			InputStream stdout = p.getInputStream();
+			
+			BufferedReader reader = new BufferedReader(new InputStreamReader(stdout));
+			BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(stdin));
+			
+				
+			writer.write("print 1 + 2");
+			
+			writer.write("\n");
+			//writer.write("quit()");
+			//writer.write("\n");
+			
+			writer.flush();
+			writer.close();
+			
+			/*
+			CharBuffer outBuffer = CharBuffer.allocate(512);
+			reader.read(outBuffer);
+			System.out.println(outBuffer.toString());
+			*/
+			
+			//reader.close();
+			
+			//Write the output.
+			Scanner scanner = new Scanner(reader);
+			while (scanner.hasNextLine()) {
+				System.out.println(scanner.nextLine());
+			}
+			
+			writer = new BufferedWriter(new OutputStreamWriter(stdin));
+			
+			writer.write("quit()");
+			writer.write("\n");
+			writer.flush();
+			writer.close();
+			
+			scanner = new Scanner(reader);
+			while (scanner.hasNextLine()) {
+				System.out.println(scanner.nextLine());
+			}
+			
+			
+			
+			
+			System.out.println("Exit: " + String.valueOf(p.exitValue()));
+			p.destroy();
+			System.out.println("All done!");
+		
+		} catch (Exception e) {
+			e.printStackTrace();
+		} 
+	}
+}
